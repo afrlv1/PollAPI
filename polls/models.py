@@ -1,30 +1,56 @@
 from django.db import models
-import uuid
 
 
-class Poll(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, blank=True, help_text='Уникальный ID пользователя')
-    poll = models.CharField(max_length=200, help_text='Название опроса')
-    description = models.CharField(max_length=200, help_text='Описание опроса')
-    start_date = models.DateField('Дата начала опроса')
-    finish_date = models.DateField('Дата окончания опроса', blank=True)
+class HeaderModel(models.Model):
+	created = models.DateTimeField(auto_now_add=True)
+	updated = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return self.poll
+	class Meta:
+		ordering = ('created', 'updated')
+		abstract = True
 
 
-class Choice(models.Model):
-    poll = models.ForeignKey(Poll, on_delete=models.SET_NULL, null=True)
-    question = models.CharField(max_length=200, help_text='Вопрос')
-    choice = models.CharField(max_length=200, help_text='Варианты ответа')
-    votes = models.CharField(max_length=20, blank=True, help_text='Введите ответ')
-    CHOICE_TYPE = (
-        ('1', 'Ответ текстом'),
-        ('2', 'ответ с выбором одного варианта'),
-        ('3', 'ответ с выбором нескольких вариантов'),
-    )
-    TypeOfChoice = models.CharField(max_length=1, choices=CHOICE_TYPE, default='1', help_text='Выбор типа ответа',)
+class QuestionSet(HeaderModel):
+	name = models.CharField(max_length=50)
+	owner = models.ForeignKey('auth.User', related_name='questionSet')
 
-    def __str__(self):
-        """String for representing the Model object."""
-        return self.question
+	class Meta(HeaderModel.Meta):
+		unique_together = ('name', 'owner')
+
+	def __str__(self):
+		return self.name
+
+
+class Question(HeaderModel):
+	question_text = models.TextField()
+	set = models.ForeignKey('QuestionSet', related_name='question')
+
+	def __str__(self):
+		return self.question_text
+
+
+class Choice(HeaderModel):
+	question = models.ForeignKey(Question, related_name='choice')
+	choice_text = models.TextField()
+	votes = models.PositiveIntegerField(default=0)
+	users = models.ManyToManyField('auth.User', related_name='choiceVoted')
+
+	def __str__(self):
+		return self.choice_text
+
+
+class Room(HeaderModel):
+	name = models.CharField(max_length=50)
+	description = models.TextField()
+	owner = models.ForeignKey('auth.User', related_name='roomOwner')
+	users = models.ManyToManyField('auth.User', related_name='roomUser', blank=True)
+	question_set = models.ForeignKey('QuestionSet', related_name='room')
+	destroyed = models.BooleanField(default=False)
+	public = models.BooleanField(blank=False)
+	latitude = models.FloatField(null=True)
+	longitude = models.FloatField(null=True)
+
+
+
+	def __str__(self):
+		return self.name

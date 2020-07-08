@@ -3,5 +3,11 @@
   <component name="JavaScriptSettings">
     <option name="languageLevel" value="ES6" />
   </component>
+  <component name="ProjectPlainTextFileTypeManager">
+    <file url="file://$PROJECT_DIR$/polls/migrations/0002_auto_20200706_0924.py" />
+    <file url="file://$PROJECT_DIR$/polls/migrations/0003_auto_20200706_0927.py" />
+    <file url="file://$PROJECT_DIR$/polls/migrations/0004_auto_20200706_1718.py" />
+    <file url="file://$PROJECT_DIR$/polls/migrations/0005_auto_20200706_1718.py" />
+  </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.8 (PollAPI)" project-jdk-type="Python SDK" />
 </project>

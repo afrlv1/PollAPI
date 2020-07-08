@@ -1,5 +1,8 @@
 from django.apps import AppConfig
 
 
-class PollsConfig(AppConfig):
-    name = 'polls'
+class PollConfig(AppConfig):
+	name = 'api'
+
+	def ready(self):
+		import api.signals

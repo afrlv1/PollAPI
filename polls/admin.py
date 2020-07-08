@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .models import Poll, Choice
+from .models import *
 
-
-admin.site.register(Poll)
+admin.site.register(Room)
+admin.site.register(Question)
 admin.site.register(Choice)
+admin.site.register(QuestionSet)
