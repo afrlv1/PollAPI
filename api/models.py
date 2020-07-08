@@ -34,6 +34,12 @@ class Choice(HeaderModel):
 	choice_text = models.TextField()
 	votes = models.PositiveIntegerField(default=0)
 	users = models.ManyToManyField('auth.User', related_name='choiceVoted')
+	CHOICE_TYPE = (
+		('1', 'Ответ текстом'),
+		('2', 'ответ с выбором одного варианта'),
+		('3', 'ответ с выбором нескольких вариантов'),
+	)
+	TypeOfChoice = models.CharField(max_length=1, choices=CHOICE_TYPE, default='1',)
 
 	def __str__(self):
 		return self.choice_text
@@ -45,6 +51,10 @@ class Room(HeaderModel):
 	owner = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='roomOwner')
 	users = models.ManyToManyField('auth.User', related_name='roomUser', blank=True)
 	question_set = models.ForeignKey('QuestionSet', on_delete=models.CASCADE, related_name='room')
+	destroyed = models.BooleanField(default=False)
+	public = models.BooleanField(blank=False)
+	latitude = models.FloatField(null=True)
+	longitude = models.FloatField(null=True)
 
 	def __str__(self):
 		return self.name
