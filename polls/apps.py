@@ -2,7 +2,7 @@ from django.apps import AppConfig
 
 
 class PollConfig(AppConfig):
-	name = 'api'
+	name = 'polls'
 
 	def ready(self):
-		import api.signals
+		import polls.signals
